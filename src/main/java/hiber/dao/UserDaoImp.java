@@ -16,7 +16,7 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public void add(User user) {
-      sessionFactory.getCurrentSession().save(user);
+      sessionFactory.getCurrentSession().persist(user);
    }
 
    @Override
@@ -24,6 +24,15 @@ public class UserDaoImp implements UserDao {
    public List<User> listUsers() {
       TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
       return query.getResultList();
+   }
+
+   @Override
+   public User getUser(String model, int series) {
+      return (User) sessionFactory.openSession()
+              .createQuery("FROM User u WHERE u.car.model = :model and u.car.series = :series")
+              .setParameter("model", model)
+              .setParameter("series", series)
+              .getSingleResult();
    }
 
 }

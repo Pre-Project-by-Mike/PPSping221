@@ -1,14 +1,21 @@
 package hiber.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 public class User {
-
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @OneToOne(
+           fetch = FetchType.LAZY,
+           cascade = CascadeType.PERSIST
+   )
+   @JoinColumn
+   private Car car;
 
    @Column(name = "name")
    private String firstName;
@@ -26,7 +33,6 @@ public class User {
       this.lastName = lastName;
       this.email = email;
    }
-
    public Long getId() {
       return id;
    }
@@ -57,5 +63,36 @@ public class User {
 
    public void setEmail(String email) {
       this.email = email;
+   }
+
+   public Car getCar() {
+      return car;
+   }
+
+   public void setCar(Car car) {
+      this.car = car;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      User user = (User) o;
+      return Objects.equals(id, user.id) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && Objects.equals(email, user.email);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(id, firstName, lastName, email);
+   }
+
+   @Override
+   public String toString() {
+      return "User{" +
+              "id=" + id +
+              ", firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              '}';
    }
 }
